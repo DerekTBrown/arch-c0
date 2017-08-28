@@ -1,0 +1,26 @@
+# .travis.yml -- Travis CI Configuration File
+# Based on https://github.com/tectonic-typesetting/tectonic
+# and https://github.com/alrra/travis-scripts/blob/master/doc/github-deploy-keys.md
+
+
+language: bash
+sudo: false
+install: true
+
+before_deploy:
+
+# Chmod for Deploy
+  - chmod +rwx deploy/deploy.sh
+
+# Decrypt SSL Keys
+  - openssl aes-256-cbc -K $encrypted_70a543aacfd4_key -iv $encrypted_70a543aacfd4_iv -in deploy/deploy-key.enc -out /tmp/deploy-key -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy-key
+  - ssh-add /tmp/deploy-key
+
+deploy:
+  provider: script
+  script: ./deploy/deploy.sh
+  skip_cleanup: true
+  on:
+    tags: true
