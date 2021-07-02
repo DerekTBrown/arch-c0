@@ -1,21 +1,27 @@
 # Maintainer: Derek Brown <derekbro@andrew.cmu.edu>
 pkgname=c0
-pkgver=0.718
+pkgver=0.771
 pkgrel=1
 pkgdesc="C0 Package for 15-122"
-url="http://c0.typesafety.net/index.html"
+url="http://c0.cs.cmu.edu"
 arch=('x86_64' 'i686')
-license=('GPL')
-depends=('libpng12>=1.2' 'zlib>=1.2' 'make>=4.0' 'gcc>=5.1' 'ncurses5-compat-libs>=6.0')
+license=('MIT')
+depends=('libpng>=1.2' 'zlib>=1.2' 'make>=4.0' 'gcc>=5.1' 'ncurses5-compat-libs>=6.0')
 provides=('coin' 'cc0')
-source=("$pkgname::http://c0.typesafety.net/dist/cc0-v718-ubuntu18.04.5-bin.tgz")
-md5sums=('14fdd3331bbe42831cfb8725bd258170')
+source=("$pkgname::https://c0.cs.cmu.edu/downloads/aux/cc0-r771.tgz" "fno-common.patch")
+md5sums=('e03e3c90b07603d899acedfc445faaf4'
+         '41a1d89191c6420779cf05a1f55339ab')
+
+prepare() {
+    cd "cc0.r771"
+    patch --forward --strip=1 --input="${srcdir}/fno-common.patch"
+}
 
 package() {
 
   # Create Installation Folder Structure
   mkdir -p $pkgdir/usr/lib/c0
-  cp -r $srcdir/cc0-v718-ubuntu18.04.5-bin/* $pkgdir/usr/lib/c0
+  cp -r $srcdir/cc0.r771/* $pkgdir/usr/lib/c0
 
   mkdir -p $pkgdir/usr/bin
 
